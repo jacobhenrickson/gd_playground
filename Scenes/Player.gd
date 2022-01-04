@@ -21,11 +21,13 @@ const JOYPAD_DEADZONE = 0.2
 const MAX_SPRINT_SPEED = 50
 const SPRINT_ACCEL = 10
 var is_sprinting = false
+var is_crouched = false
 
 var origin = global_transform.origin
 var chunk_size = 32
 
 var health = 50
+var current_weapon_model = preload("res://Scenes/Weapon.tscn")
 
 var camera
 onready var FirstPersonCamera = get_node("Body/FirstPersonCamera")
@@ -33,8 +35,10 @@ onready var FirstPersonCamera = get_node("Body/FirstPersonCamera")
 var transform_person_1st
 var transform_person_3rd
 
-var statemachine = null
-
+var gun = preload("res://Scenes/Weapon.tscn")
+var gun_left = null
+var gun_right = null
+var space_state
 
 func _ready():
 	camera = FirstPersonCamera
@@ -47,6 +51,8 @@ func _physics_process(delta):
 	process_movement(delta)
 	process_view_input(delta)
 	player_detect_coords(delta)
+	
+	space_state = get_world().direct_space_state
 
 func process_input(delta):
 
@@ -114,16 +120,30 @@ func process_input(delta):
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	# Sprinting
-	if Input.is_action_pressed("sprint"):
-		is_sprinting = true
+	if Input.is_action_just_pressed("sprint"):
+		# Sprint is toggled for testing, make sure to remap later
+		if is_sprinting == false:
+			is_sprinting = true
 #		$AvatarMaleV2/RootNode/AnimationPlayer.play("Run")
-		pass
-	else:
-		is_sprinting = false
+			print("Sprint Toggled: ON")
+		else:
+			is_sprinting = false
+			print("Sprint Toggled: OFF")
 		
+	# Crouching
+	if Input.is_action_just_pressed("crouch"):
+		if is_crouched == false:
+			is_crouched = true
+			# TODO: translate camera down
+			# TODO: display hidden eye in the HUD
+		else:
+			is_crouched = false
+			# TODO: undo crouch behaviors
+#		print("crouch value is :", is_crouched)
+
 	# Return to Origin
 	if Input.is_action_just_pressed("return_origin"):
-		global_transform.origin = get_parent().get_node("StartPlatform").transform.origin
+		global_transform.origin = get_parent().get_node(".").transform.origin
 		
 #	if Input.is_action_just_pressed("swap_perspective"):
 #		if camera == FirstPersonCamera:
@@ -137,9 +157,24 @@ func process_input(delta):
 #			camera = FirstPersonCamera
 ##			camera.rotation = transform_person_1st
 
+	# Draw the gun
+	if Input.is_action_just_released("draw_weapons"):
+		var weapon = gun.instance()
+		weapon.set_ammo(6)
+		weapon.transform.origin = $Body/ArmLeft/Position3D.transform.origin
+
 	# Firing the gun
+#	if gun_left or gun_right not null:
+	
 	if Input.is_action_just_pressed("fire_right"):
-		$Body/Arms/Right/Gun.fire()
+#		current_weapon_model.fire_weapon(space_state)
+		# Invalid call. Nonexistent function 'fire_weapon' in base 'PackedScene'.
+		print("fired right")
+
+	if Input.is_action_just_pressed("fire_left"):
+#		current_weapon_model.fire_weapon(space_state)
+		# Invalid call. Nonexistent function 'fire_weapon' in base 'PackedScene'.
+		print("fired left")
 
 func process_movement(delta):
 	dir.y = 0
