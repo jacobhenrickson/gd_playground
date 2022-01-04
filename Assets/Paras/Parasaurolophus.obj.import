@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Parasaurolophus.obj-d4da10d3ddd909159ee8845afd1a4bac.mesh"
+
+[deps]
+
+files=[ "res://.import/Parasaurolophus.obj-d4da10d3ddd909159ee8845afd1a4bac.mesh" ]
+
+source_file="res://Assets/Paras/Parasaurolophus.obj"
+dest_files=[ "res://.import/Parasaurolophus.obj-d4da10d3ddd909159ee8845afd1a4bac.mesh", "res://.import/Parasaurolophus.obj-d4da10d3ddd909159ee8845afd1a4bac.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
